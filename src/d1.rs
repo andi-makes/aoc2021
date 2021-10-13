@@ -1,14 +1,16 @@
 use super::{Runnable, Day};
 
-impl Runnable for Day<1> {
-    fn init() -> Self {
-        println!("Init Day 1");
-        Self {}
+type Data = Vec<i32>;
+impl Runnable<Data> for Day<1> {
+    fn init() -> (Self, Data) {
+        let v = vec![0];
+        (Self {}, v)
     }
-    fn one(&self) {
-        println!("Part 1 Day 1")
+    fn one(&self, data: &mut Data) {
+        
     }
-    fn two(&self) {
-        println!("Part 2 Day 1")
+    fn two(&self, data: &mut Data) {
+        
     }
 }
+

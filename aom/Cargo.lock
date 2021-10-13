@@ -3,13 +3,6 @@
 version = 3
 
 [[package]]
-name = "aoc2021"
-version = "0.1.0"
-dependencies = [
- "aom",
-]
-
-[[package]]
 name = "aom"
 version = "0.1.0"
 dependencies = [
