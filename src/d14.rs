@@ -1,4 +1,4 @@
-use super::{Runnable, Day};
+use crate::{Runnable, Day};
 
 type Data = Vec<i32>;
 impl Runnable<Data> for Day<14> {
@@ -6,10 +6,10 @@ impl Runnable<Data> for Day<14> {
         let v = vec![0];
         (Self {}, v)
     }
-    fn one(&self, data: &mut Data) {
+    fn one(&self, _data: &mut Data) {
         
     }
-    fn two(&self, data: &mut Data) {
+    fn two(&self, _data: &mut Data) {
         
     }
 }
