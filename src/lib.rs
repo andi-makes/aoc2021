@@ -9,7 +9,9 @@ pub enum Run {
 struct Day<const DAY: u8>;
 
 trait Runnable<T: std::clone::Clone> {
-    fn init() -> (Self, T) where Self: Sized;
+    fn init() -> (Self, T)
+    where
+        Self: Sized;
     fn one(&self, data: &mut T);
     fn two(&self, data: &mut T);
     fn run(&self, data: &mut T, run: Run) {
