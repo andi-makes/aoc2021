@@ -2,21 +2,27 @@
 
 for i in {1..25}
 do
-echo "use crate::{Runnable, Day};
+echo "use crate::{Day, Runnable};
+use const_format::formatcp;
 
-type Data = Vec<i32>;
-impl Runnable<Data> for Day<$i> {
+const CURRENT_DAY: u8 = $i;
+const FILE: &'static str = formatcp!(\"./inputs/input{}.txt\", CURRENT_DAY);
+
+type Data = Vec<String>;
+impl Runnable<Data> for Day<CURRENT_DAY> {
     fn init() -> (Self, Data) {
-        let v = vec![0];
+        let v: Data = std::fs::read_to_string(FILE)
+            .unwrap()
+            .lines()
+            .map(|s| s.to_string())
+            .collect();
+
         (Self {}, v)
     }
-    fn one(&self, _data: &mut Data) {
-        
-    }
-    fn two(&self, _data: &mut Data) {
-        
-    }
+    fn one(&self, _data: &mut Data) {}
+    fn two(&self, _data: &mut Data) {}
 }
+
 " >> "src/d$i.rs"
 done
 
