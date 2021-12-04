@@ -8,3 +8,4 @@ edition = "2018"
 [dependencies]
 aom = { path = "aom" }
 const_format = "0.2"
+colored = "2"
