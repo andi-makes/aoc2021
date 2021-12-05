@@ -9,3 +9,4 @@ edition = "2018"
 aom = { path = "aom" }
 const_format = "0.2"
 colored = "2"
+num = "0.4"
