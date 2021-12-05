@@ -15,8 +15,8 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
 
         (Self {}, v)
     }
-    fn one(&self, _data: &mut Data) {}
-    fn two(&self, _data: &mut Data) {}
+    fn one(&self, _data: &mut Data) -> u64 { todo!() }
+    fn two(&self, _data: &mut Data) -> u64 { todo!() }
 }
 
 

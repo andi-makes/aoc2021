@@ -1,3 +1,5 @@
+use std::convert::TryInto;
+
 use crate::{Day, Runnable};
 use const_format::formatcp;
 
@@ -49,7 +51,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
 
         (Self {}, v)
     }
-    fn one(&self, data: &mut Data) {
+    fn one(&self, data: &mut Data) -> u64 {
         let mut horizontal = 0;
         let mut vertical = 0;
 
@@ -60,9 +62,9 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                 Direction::Down => vertical += point.amount,
             }
         }
-        println!("[{}]", horizontal*vertical);
+        (horizontal*vertical).try_into().unwrap()
     }
-    fn two(&self, data: &mut Data) {
+    fn two(&self, data: &mut Data) -> u64 {
         let mut horizontal = 0;
         let mut vertical = 0;
         let mut aim = 0;
@@ -77,7 +79,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                 Direction::Down => aim+=point.amount,
             }
         }
-        println!("[{}]", horizontal*vertical); // 385593268
+        (horizontal*vertical).try_into().unwrap() // 385593268
     }
 }
 

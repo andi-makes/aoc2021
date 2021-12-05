@@ -16,7 +16,9 @@ pub fn generate_day_match(_input: TokenStream) -> TokenStream {
     let res = quote! {
         match day {
             #(#r => {
+                let start = Instant::now();
                 let (d, mut data) = Day::<#r>::init();
+                println!("Data parsing: {}us", start.elapsed().as_micros());
                 d.run(&mut data, run);
             })*
             _ => panic!("Days out of Bounds! No presents for you!"),

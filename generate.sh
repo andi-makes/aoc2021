@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in {1..25}
+for i in {6..25}
 do
 echo "use crate::{Day, Runnable};
 use const_format::formatcp;
@@ -19,8 +19,8 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
 
         (Self {}, v)
     }
-    fn one(&self, _data: &mut Data) {}
-    fn two(&self, _data: &mut Data) {}
+    fn one(&self, _data: &mut Data) -> u64 { todo!() }
+    fn two(&self, _data: &mut Data) -> u64 { todo!() }
 }
 
 " >> "src/d$i.rs"

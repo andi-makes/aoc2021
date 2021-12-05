@@ -15,22 +15,22 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
 
         (Self {}, v)
     }
-    fn one(&self, data: &mut Data) {
-        let mut incresed = 0;
+    fn one(&self, data: &mut Data) -> u64 {
+        let mut increased = 0;
         for i in 1..data.len() {
             if data[i] > data[i-1] {
-                incresed += 1;
+                increased += 1;
             }
         }
-        println!("[{}]", incresed);
+        increased
     }
-    fn two(&self, data: &mut Data) {
+    fn two(&self, data: &mut Data) -> u64 {
         let mut incresed = 0;
         for i in 3..(data.len()) {
             if (data[i] + data[i-1] + data[i-2]) > (data[i-1] + data[i-2] + data[i-3]) {
                 incresed += 1;
             }
         }
-        println!("[{}]", incresed); // 1851, 1852
+        incresed // 1851, 1852
     }
 }

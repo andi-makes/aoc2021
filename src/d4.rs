@@ -122,7 +122,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
 
         (Self {}, v)
     }
-    fn one(&self, data: &mut Data) {
+    fn one(&self, data: &mut Data) -> u64 {
         let (number, board) = loop {
             let num = data.check_number();
             let board = *data.is_bingo().first().unwrap();
@@ -144,14 +144,15 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                 },
             );
 
-        println!(
-            "Unchecked Numbers: {}, Winning Number: {} => {}",
-            unchecked_number_sum,
-            number,
-            unchecked_number_sum * number
-        ); // Too low: 56420
+        // println!(
+        //     "Unchecked Numbers: {}, Winning Number: {} => {}",
+        //     unchecked_number_sum,
+        //     number,
+        //     unchecked_number_sum * number
+        // ); // Too low: 56420
+        (unchecked_number_sum * number).into()
     }
-    fn two(&self, data: &mut Data) {
+    fn two(&self, data: &mut Data) -> u64 {
         // Remove all but one bingo board
         loop {
             data.check_number();
@@ -194,12 +195,13 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                 },
             );
 
-        println!(
-            "Unchecked Numbers: {}, Winning Number: {} => {}",
-            unchecked_number_sum,
-            number,
-            unchecked_number_sum * number
-        );
+        // println!(
+        //     "Unchecked Numbers: {}, Winning Number: {} => {}",
+        //     unchecked_number_sum,
+        //     number,
+        //     unchecked_number_sum * number
+        // );
+        (unchecked_number_sum * number).into()
         // Too low: 3640
     }
 }

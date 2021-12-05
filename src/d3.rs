@@ -38,7 +38,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
 
         (Self {}, v)
     }
-    fn one(&self, data: &mut Data) {
+    fn one(&self, data: &mut Data) -> u64 {
         let data: &Data = data; // Remove mut
         let mut gamma: u32 = 0;
         let length = data.len() as u32;
@@ -54,14 +54,15 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
         }
         // We get epsilon by bitwise inverting gamma.
         // We must only invert the used bits, otherwise the number is wrong.
-        println!(
-            "y: {}, e: {} => {}",
-            gamma,
-            gamma ^ 0xFFF,
-            gamma * (gamma ^ 0xFFF)
-        );
+        // println!(
+        //     "y: {}, e: {} => {}",
+        //     gamma,
+        //     gamma ^ 0xFFF,
+        //     gamma * (gamma ^ 0xFFF)
+        // );
+        (gamma * (gamma ^ 0xFFF)) as u64
     }
-    fn two(&self, data: &mut Data) {
+    fn two(&self, data: &mut Data) -> u64 {
         let mut o2 = data.clone();
         let mut co2 = data.clone();
         for i in (0..12).rev() {
@@ -97,6 +98,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
         let o2 = o2[0];
         let co2 = co2[0];
 
-        println!("o2: {}, co2: {} => {}", o2, co2, o2 * co2);
+        //println!("o2: {}, co2: {} => {}", o2, co2, o2 * co2);
+        (o2 * co2).into()
     }
 }

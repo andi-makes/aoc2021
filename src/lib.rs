@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 aom::mod_days!();
 
 pub enum Run {
@@ -12,16 +14,28 @@ trait Runnable<T: std::clone::Clone> {
     fn init() -> (Self, T)
     where
         Self: Sized;
-    fn one(&self, data: &mut T);
-    fn two(&self, data: &mut T);
+    fn one(&self, data: &mut T) -> u64;
+    fn two(&self, data: &mut T) -> u64;
     fn run(&self, data: &mut T, run: Run) {
         match run {
             Run::Both => {
-                self.one(&mut data.clone());
-                self.two(&mut data.clone());
+                let start = Instant::now();
+                let res = self.one(&mut data.clone());
+                println!("Part 1: [{}],\ttook {}us", res, start.elapsed().as_micros());
+                let start = Instant::now();
+                let res = self.two(&mut data.clone());
+                println!("Part 2: [{}],\ttook {}us", res, start.elapsed().as_micros());
             }
-            Run::One => self.one(data),
-            Run::Two => self.two(data),
+            Run::One => {
+                let start = Instant::now();
+                let res = self.one(&mut data.clone());
+                println!("Part 1: [{}],\ttook {}us", res, start.elapsed().as_micros());
+            },
+            Run::Two => {
+                let start = Instant::now();
+                let res = self.two(&mut data.clone());
+                println!("Part 2: [{}],\ttook {}us", res, start.elapsed().as_micros());
+            },
         };
     }
 }
