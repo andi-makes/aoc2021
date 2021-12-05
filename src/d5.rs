@@ -7,11 +7,6 @@ use num::Integer;
 const CURRENT_DAY: u8 = 5;
 const FILE: &'static str = formatcp!("./inputs/input{}.txt", CURRENT_DAY);
 
-pub struct Vec2D {
-    x: i32,
-    y: i32,
-}
-
 #[derive(Clone, Debug)]
 pub struct Line {
     start_pos: (i32, i32),
@@ -58,7 +53,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
             loop {
                 let pos = (line.start_pos.0 + step * k.0, line.start_pos.1 + step * k.1);
 
-                let already_existing = positions.get(&pos).unwrap_or(&0);
+                let already_existing = positions.get(&pos).unwrap_or(&0).clone();
                 positions.insert(pos, already_existing + 1);
 
                 if pos == line.end_pos {
@@ -81,7 +76,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
             loop {
                 let pos = (line.start_pos.0 + step * k.0, line.start_pos.1 + step * k.1);
 
-                let already_existing = positions.get(&pos).unwrap_or(&0);
+                let already_existing = positions.get(&pos).unwrap_or(&0).clone();
                 positions.insert(pos, already_existing + 1);
 
                 if pos == line.end_pos {
