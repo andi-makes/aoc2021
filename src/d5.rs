@@ -1,8 +1,7 @@
-use std::{collections::HashMap, convert::TryInto};
+use std::convert::TryInto;
 
 use crate::{Day, Runnable};
 use const_format::formatcp;
-use num::Integer;
 
 const CURRENT_DAY: u8 = 5;
 const FILE: &'static str = formatcp!("./inputs/input{}.txt", CURRENT_DAY);
@@ -18,28 +17,21 @@ pub struct Line {
 
 impl Line {
     fn from(start_pos: Position, end_pos: Position) -> Self {
-        Self{
+        Self {
             start_pos,
             end_pos,
             k: {
                 let x = end_pos.0 - start_pos.0;
                 let y = end_pos.1 - start_pos.1;
 
-                let divisor = x.gcd(&y);
+                // This works because of the fact, that the lines only are
+                // horizontal, vertical, or diagonal
+                // If they allowed ks like (1, 2), you'd need to use GCD
+                let divisor = std::cmp::max(x.abs(), y.abs());
 
                 (x / divisor, y / divisor)
-            }
+            },
         }
-    }
-
-    fn get_k(&self) -> (i16, i16) {
-        self.k
-        // let x = self.end_pos.0 - self.start_pos.0;
-        // let y = self.end_pos.1 - self.start_pos.1;
-
-        // let divisor = x.gcd(&y);
-
-        // (x / divisor, y / divisor)
     }
 }
 
@@ -51,8 +43,14 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
             .lines()
             .map(|s| {
                 let splitted = s.split(" -> ").collect::<Vec<&str>>();
-                let start: Vec<i16> = splitted[0].split(',').map(|num| num.parse().unwrap()).collect();
-                let end: Vec<i16> = splitted[1].split(',').map(|num| num.parse().unwrap()).collect();
+                let start: Vec<i16> = splitted[0]
+                    .split(',')
+                    .map(|num| num.parse().unwrap())
+                    .collect();
+                let end: Vec<i16> = splitted[1]
+                    .split(',')
+                    .map(|num| num.parse().unwrap())
+                    .collect();
 
                 Line::from((start[0], start[1]), (end[0], end[1]))
             })
@@ -61,56 +59,107 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
         (Self {}, v)
     }
     fn one(&self, data: &mut Data) -> u64 {
-        let mut positions: HashMap<Position, u32> = HashMap::new();
-        data.iter().filter(|line| {
-            let k = line.get_k();
-            k.0 == 0 || k.1 == 0
-        }).for_each(|line| {
-            // In this part, we have k amount of steps
-            let k = line.get_k();
-            let mut step = 0;
-            loop {
-                let pos = (line.start_pos.0 + step * k.0, line.start_pos.1 + step * k.1);
+        let mut positions: [u8; 1000 * 1000] = [0; 1000 * 1000];
 
-                let already_existing = positions.get(&pos).unwrap_or(&0).clone();
-                positions.insert(pos, already_existing + 1);
+        data.iter()
+            .filter(|line| line.k.0 == 0 || line.k.1 == 0)
+            .for_each(|line| {
+                let k = &line.k;
 
-                if pos == line.end_pos {
-                    break;
+                let mut pos = (line.start_pos.0, line.start_pos.1);
+                loop {
+                    positions[(pos.1 as usize) * 1000 + pos.0 as usize] += 1;
+
+                    if pos == line.end_pos {
+                        break;
+                    }
+
+                    pos.0 += k.0;
+                    pos.1 += k.1;
                 }
+            });
 
-                step += 1;
-            }
-        });
+        positions
+            .iter()
+            .filter(|f| f >= &&2)
+            .count()
+            .try_into()
+            .unwrap()
 
-        positions.iter().filter(|(_,f)| {
-            f >= &&2
-        }).count().try_into().unwrap()
+        // let mut positions: HashMap<Position, u32> = HashMap::new();
+        // data.iter()
+        //     .filter(|line| line.k.0 == 0 || line.k.1 == 0)
+        //     .for_each(|line| {
+        //         let k = &line.k;
+
+        //         let mut pos = (line.start_pos.0, line.start_pos.1);
+        //         loop {
+        //             *positions.entry(pos).or_insert(0) += 1;
+
+        //             if pos == line.end_pos {
+        //                 break;
+        //             }
+
+        //             pos.0 += k.0;
+        //             pos.1 += k.1;
+        //         }
+        //     });
+
+        // positions
+        //     .iter()
+        //     .filter(|(_, f)| f >= &&2)
+        //     .count()
+        //     .try_into()
+        //     .unwrap()
     }
     fn two(&self, data: &mut Data) -> u64 {
-        let mut positions: HashMap<Position, u8> = HashMap::new();
-        data.iter().for_each(|line| {
-            // In this part, we have k amount of steps
-            let k = line.get_k();
-            let mut step = 0;
-            loop {
-                let pos = (line.start_pos.0 + step * k.0, line.start_pos.1 + step * k.1);
+        let mut positions: [u8; 1000 * 1000] = [0; 1000 * 1000];
 
-                let already_existing = positions.get(&pos).unwrap_or(&0).clone();
-                positions.insert(pos, already_existing + 1);
+        data.iter().for_each(|line| {
+            let k = &line.k;
+
+            let mut pos = (line.start_pos.0, line.start_pos.1);
+            loop {
+                positions[(pos.1 as usize) * 1000 + pos.0 as usize] += 1;
 
                 if pos == line.end_pos {
                     break;
                 }
 
-                step += 1;
+                pos.0 += k.0;
+                pos.1 += k.1;
             }
         });
 
-        positions.iter().filter(|(_,f)| {
-            f >= &&2
-        }).count().try_into().unwrap()
+        positions
+            .iter()
+            .filter(|f| f >= &&2)
+            .count()
+            .try_into()
+            .unwrap()
+
+        // let mut positions: HashMap<Position, u8> = HashMap::new();
+        // data.iter().for_each(|line| {
+        //     let k = &line.k;
+
+        //     let mut pos = (line.start_pos.0, line.start_pos.1);
+        //     loop {
+        //         *positions.entry(pos).or_insert(0) += 1;
+
+        //         if pos == line.end_pos {
+        //             break;
+        //         }
+
+        //         pos.0 += k.0;
+        //         pos.1 += k.1;
+        //     }
+        // });
+
+        // positions
+        //     .iter()
+        //     .filter(|(_, f)| f >= &&2)
+        //     .count()
+        //     .try_into()
+        //     .unwrap()
     }
 }
-
-
