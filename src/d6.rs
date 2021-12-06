@@ -4,7 +4,9 @@ use const_format::formatcp;
 const CURRENT_DAY: u8 = 6;
 const FILE: &'static str = formatcp!("./inputs/input{}.txt", CURRENT_DAY);
 
-fn evolve(d: &mut [u64; 9], steps: u64) -> u64 {
+type Data = [u64; 9];
+
+fn evolve(d: &mut Data, steps: u64) -> u64 {
     for _ in 0..steps {
         let mut buffer = [0; 9];
 
@@ -34,30 +36,21 @@ fn evolve(d: &mut [u64; 9], steps: u64) -> u64 {
     d.iter().fold(0, |sum, f| sum + f)
 }
 
-type Data = Vec<u64>;
 impl Runnable<Data> for Day<CURRENT_DAY> {
     fn init() -> (Self, Data) {
-        let v: Data = std::fs::read_to_string(FILE)
+        let mut v: Data = [0;9];
+        std::fs::read_to_string(FILE)
             .unwrap()
             .trim()
             .split(',')
-            .map(|s| s.parse::<u64>().unwrap())
-            .collect();
+            .for_each(|elem| v[elem.parse::<usize>().unwrap()] += 1);
 
         (Self {}, v)
     }
     fn one(&self, data: &mut Data) -> u64 {
-        let mut d = [0; 9]; // 0, 1, 2, 3, 4, 5, 6, 7, 8
-        for entry in data {
-            d[*entry as usize] += 1;
-        }
-        evolve(&mut d, 80)
+        evolve(data, 80)
     }
     fn two(&self, data: &mut Data) -> u64 {
-        let mut d = [0; 9]; // 0, 1, 2, 3, 4, 5, 6, 7, 8
-        for entry in data {
-            d[*entry as usize] += 1;
-        }
-        evolve(&mut d, 256)
+        evolve(data, 256)
     }
 }
