@@ -37,7 +37,7 @@ impl Line {
 
 type Data = Vec<Line>;
 impl Runnable<Data> for Day<CURRENT_DAY> {
-    fn init() -> (Self, Data) {
+    fn init(_input: &str) -> (Self, Data) {
         let v: Data = std::fs::read_to_string(FILE)
             .unwrap()
             .lines()

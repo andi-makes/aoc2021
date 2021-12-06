@@ -16,9 +16,11 @@ pub fn generate_day_match(_input: TokenStream) -> TokenStream {
     let res = quote! {
         match day {
             #(#r => {
+                let input = &std::fs::read_to_string(format!("./inputs/input{}.txt", #r)).unwrap();
                 let start = Instant::now();
-                let (d, mut data) = Day::<#r>::init();
-                println!("Data parsing: {}us", start.elapsed().as_micros());
+                let (d, mut data) = Day::<#r>::init(input);
+                let delta = start.elapsed();
+                println!("Data parsing: {}us", delta.as_micros());
                 d.run(&mut data, run);
             })*
             _ => panic!("Days out of Bounds! No presents for you!"),

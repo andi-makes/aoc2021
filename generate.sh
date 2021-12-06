@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in {6..25}
+for i in {7..25}
 do
 echo "use crate::{Day, Runnable};
 use const_format::formatcp;
@@ -10,7 +10,7 @@ const FILE: &'static str = formatcp!(\"./inputs/input{}.txt\", CURRENT_DAY);
 
 type Data = Vec<String>;
 impl Runnable<Data> for Day<CURRENT_DAY> {
-    fn init() -> (Self, Data) {
+    fn init(_input: &str) -> (Self, Data) {
         let v: Data = std::fs::read_to_string(FILE)
             .unwrap()
             .lines()

@@ -1,8 +1,8 @@
 use crate::{Day, Runnable};
-use const_format::formatcp;
+// use const_format::formatcp;
 
 const CURRENT_DAY: u8 = 6;
-const FILE: &'static str = formatcp!("./inputs/input{}.txt", CURRENT_DAY);
+// const FILE: &'static str = formatcp!("./inputs/input{}.txt", CURRENT_DAY);
 
 type Data = [u64; 9];
 
@@ -37,10 +37,9 @@ fn evolve(d: &mut Data, steps: u64) -> u64 {
 }
 
 impl Runnable<Data> for Day<CURRENT_DAY> {
-    fn init() -> (Self, Data) {
+    fn init(input: &str) -> (Self, Data) {
         let mut v: Data = [0;9];
-        std::fs::read_to_string(FILE)
-            .unwrap()
+        input
             .trim()
             .split(',')
             .for_each(|elem| v[elem.parse::<usize>().unwrap()] += 1);

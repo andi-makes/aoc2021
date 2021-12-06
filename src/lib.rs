@@ -11,7 +11,7 @@ pub enum Run {
 struct Day<const DAY: u8>;
 
 trait Runnable<T: std::clone::Clone> {
-    fn init() -> (Self, T)
+    fn init(input: &str) -> (Self, T)
     where
         Self: Sized;
     fn one(&self, data: &mut T) -> u64;
