@@ -21,39 +21,39 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                 let mut split = s.split(" | ");
                 SegmentData {
                     pre: split
-                    .next()
-                    .unwrap()
-                    .split_whitespace()
-                    .map(|f| {
-                        let mut buf = [0; 7];
-                        f.split("").for_each(|c| match c {
-                            "a" => buf[0] = 1,
-                            "b" => buf[1] = 1,
-                            "c" => buf[2] = 1,
-                            "d" => buf[3] = 1,
-                            "e" => buf[4] = 1,
-                            "f" => buf[5] = 1,
-                            "g" => buf[6] = 1,
-                            _ => {}
-                        });
-                        let mut out = String::new();
-                        for i in 0..7 {
-                            if buf[i] == 1 {
-                                match i {
-                                    0 => out += "a",
-                                    1 => out += "b",
-                                    2 => out += "c",
-                                    3 => out += "d",
-                                    4 => out += "e",
-                                    5 => out += "f",
-                                    6 => out += "g",
-                                    _ => panic!(),
+                        .next()
+                        .unwrap()
+                        .split_whitespace()
+                        .map(|f| {
+                            let mut buf = [0; 7];
+                            f.split("").for_each(|c| match c {
+                                "a" => buf[0] = 1,
+                                "b" => buf[1] = 1,
+                                "c" => buf[2] = 1,
+                                "d" => buf[3] = 1,
+                                "e" => buf[4] = 1,
+                                "f" => buf[5] = 1,
+                                "g" => buf[6] = 1,
+                                _ => {}
+                            });
+                            let mut out = String::new();
+                            for i in 0..7 {
+                                if buf[i] == 1 {
+                                    match i {
+                                        0 => out += "a",
+                                        1 => out += "b",
+                                        2 => out += "c",
+                                        3 => out += "d",
+                                        4 => out += "e",
+                                        5 => out += "f",
+                                        6 => out += "g",
+                                        _ => panic!(),
+                                    }
                                 }
                             }
-                        }
-                        out
-                    })
-                    .collect(),
+                            out
+                        })
+                        .collect(),
                     post: split
                         .next()
                         .unwrap()
@@ -148,7 +148,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                 .split("")
                 .filter(|s| !s.is_empty())
                 .collect();
-                
+
             // Out of 1, we can determine 2, 5 and 6, because that are the only
             // three numbers that don't contain 1 as a whole.
             let two_five_or_six: Vec<&String> = d
@@ -278,51 +278,56 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
             let nine = nine.join("");
 
             // Let's parse the output, shall we?
-            let number = d.post.iter().map(|f| {
-                if f == &zero {
-                    print!("0");
-                    return 0;
-                }
-                if f == &one {
-                    print!("1");
-                    return 1;
-                }
-                if f == &two_num {
-                    print!("2");
-                    return 2;
-                }
-                if f == &three {
-                    print!("3");
-                    return 3;
-                }
-                if f == &four {
-                    print!("4");
-                    return 4;
-                }
-                if f == &five {
-                    print!("5");
-                    return 5;
-                }
-                if f == &six {
-                    print!("6");
-                    return 6;
-                }
-                if f == &seven {
-                    print!("7");
-                    return 7;
-                }
-                if f == &eight {
-                    print!("8");
-                    return 8;
-                }
-                if f == &nine {
-                    print!("9");
-                    return 9;
-                }
-                0
-            }).enumerate().fold(0, |sum, (i, f)| sum + f*pow(10, 3-i));
-            print!(", {}", sum);
-            println!("");
+            let number = d
+                .post
+                .iter()
+                .map(|f| {
+                    if f == &zero {
+                        // print!("0");
+                        return 0;
+                    }
+                    if f == &one {
+                        // print!("1");
+                        return 1;
+                    }
+                    if f == &two_num {
+                        // print!("2");
+                        return 2;
+                    }
+                    if f == &three {
+                        // print!("3");
+                        return 3;
+                    }
+                    if f == &four {
+                        // print!("4");
+                        return 4;
+                    }
+                    if f == &five {
+                        // print!("5");
+                        return 5;
+                    }
+                    if f == &six {
+                        // print!("6");
+                        return 6;
+                    }
+                    if f == &seven {
+                        // print!("7");
+                        return 7;
+                    }
+                    if f == &eight {
+                        // print!("8");
+                        return 8;
+                    }
+                    if f == &nine {
+                        // print!("9");
+                        return 9;
+                    }
+                    0
+                })
+                .enumerate()
+                .fold(0, |sum, (i, f)| sum + f * pow(10, 3 - i));
+            // print!(", {}", sum);
+            // println!("");
             sum + number
         })
     }
