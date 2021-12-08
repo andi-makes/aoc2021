@@ -148,14 +148,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                 .split("")
                 .filter(|s| !s.is_empty())
                 .collect();
-
-            // We can determine segment a:
-            // 7 - 1 = a
-            let a = *seven
-                .iter()
-                .filter(|&&s| s != one[0] && s != one[1])
-                .next()
-                .unwrap();
+                
             // Out of 1, we can determine 2, 5 and 6, because that are the only
             // three numbers that don't contain 1 as a whole.
             let two_five_or_six: Vec<&String> = d
