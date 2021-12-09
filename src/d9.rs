@@ -12,37 +12,33 @@ const HEIGHT: usize = 100;
 
 const SIZE: usize = WIDTH * HEIGHT;
 
-type Data = [u8; SIZE as usize];
+type Data = [u8; SIZE];
 
 type Visited = [bool; SIZE];
 
 fn is_lowest(data: &Data, x: usize, y: usize) -> bool {
     let mut lowest: bool; // RAII is unhappy now :(
     if x == 0 {
-        lowest = data[(y * WIDTH) as usize] < data[(y * WIDTH + 1) as usize];
+        lowest = data[y * WIDTH] < data[y * WIDTH + 1];
     } else if x == WIDTH - 1 {
-        lowest = data[(y * WIDTH + x) as usize] < data[(y * WIDTH + x - 1) as usize];
+        lowest = data[y * WIDTH + x] < data[y * WIDTH + x - 1];
     } else {
-        lowest = data[(y * WIDTH + x) as usize] < data[(y * WIDTH + x + 1) as usize]
-            && data[(y * WIDTH + x) as usize] < data[(y * WIDTH + x - 1) as usize];
+        lowest = data[y * WIDTH + x] < data[y * WIDTH + x + 1]
+            && data[y * WIDTH + x] < data[y * WIDTH + x - 1];
     }
     if !lowest {
         return false;
     }
     if y == 0 {
-        lowest = lowest && data[(x) as usize] < data[(WIDTH + x) as usize];
+        lowest = lowest && data[x] < data[WIDTH + x];
     } else if y == HEIGHT - 1 {
-        lowest = lowest && data[(y * WIDTH + x) as usize] < data[((y - 1) * WIDTH + x) as usize];
+        lowest = lowest && data[y * WIDTH + x] < data[(y - 1) * WIDTH + x];
     } else {
         lowest = lowest
-            && data[(y * WIDTH + x) as usize] < data[((y + 1) * WIDTH + x) as usize]
-            && data[(y * WIDTH + x) as usize] < data[((y - 1) * WIDTH + x) as usize];
+            && data[y * WIDTH + x] < data[(y + 1) * WIDTH + x]
+            && data[y * WIDTH + x] < data[(y - 1) * WIDTH + x];
     }
     lowest
-}
-
-fn is_higher(data: &Data, x: usize, y: usize, reference: u8, visited: &mut Visited) -> bool {
-    data[y * WIDTH + x] > reference && data[y*WIDTH+x] != 9 && visited[y*WIDTH+x] == false
 }
 
 fn get_basin_size(data: &Data, x: usize, y: usize, visited: &mut Visited) -> usize {
@@ -51,51 +47,45 @@ fn get_basin_size(data: &Data, x: usize, y: usize, visited: &mut Visited) -> usi
     }
 
     let mut size = 1;
-    // data[y*WIDTH+x+1] == 9 ==> ()
-    // data[y*WIDTH+x-1] == 9 ==> ()
-    // data[(y+1)*WIDTH+x] == 9 ==> ()
-    // data[(y-1)*WIDTH+x] == 9 ==> ()
-    // This would be a single lowpoint only surrounded with nines.
-
     visited[y*WIDTH+x] = true;
 
     if x == 0 {
-        if is_higher(data, x+1, y, data[y*WIDTH+x], visited) {
-            println!("{}", data[y*WIDTH+x+1]);
+        if visited[y*WIDTH+x+1] == false {
+            // println!("{}", data[y*WIDTH+x+1]);
             size += get_basin_size(data, x+1, y, visited);
         }
     } else if x == WIDTH - 1 {
-        if is_higher(data, x-1, y, data[y*WIDTH+x], visited) {
-            println!("{}", data[y*WIDTH+x-1]);
+        if visited[y*WIDTH+x-1] == false {
+            // println!("{}", data[y*WIDTH+x-1]);
             size += get_basin_size(data, x-1, y, visited);
         }
     } else {
-        if is_higher(data, x+1, y, data[y*WIDTH+x], visited) {
-            println!("{}", data[y*WIDTH+x+1]);
+        if visited[y*WIDTH+x+1] == false {
+            // println!("{}", data[y*WIDTH+x+1]);
             size += get_basin_size(data, x+1, y, visited);
         }
-        if is_higher(data, x-1, y, data[y*WIDTH+x], visited) {
-            println!("{}", data[y*WIDTH+x-1]);
+        if visited[y*WIDTH+x-1] == false {
+            // println!("{}", data[y*WIDTH+x-1]);
             size += get_basin_size(data, x-1, y, visited);
         }
     }
     if y == 0 {
-        if is_higher(data, x, y+1, data[y*WIDTH+x], visited) {
-            println!("{}", data[(y+1)*WIDTH+x]);
+        if visited[(y+1)*WIDTH+x] == false {
+            // println!("{}", data[(y+1)*WIDTH+x]);
             size += get_basin_size(data, x, y+1, visited);
         }
     } else if y == HEIGHT - 1 {
-        if is_higher(data, x, y-1, data[y*WIDTH+x], visited) {
-            println!("{}", data[(y-1)*WIDTH+x]);
+        if visited[(y-1)*WIDTH+x] == false {
+            // println!("{}", data[(y-1)*WIDTH+x]);
             size += get_basin_size(data, x, y-1, visited);
         }
     } else {
-        if is_higher(data, x, y+1, data[y*WIDTH+x], visited) {
-            println!("{}", data[(y+1)*WIDTH+x]);
+        if visited[(y+1)*WIDTH+x] == false {
+            // println!("{}", data[(y+1)*WIDTH+x]);
             size += get_basin_size(data, x, y+1, visited);
         }
-        if is_higher(data, x, y-1, data[y*WIDTH+x], visited) {
-            println!("{}", data[(y-1)*WIDTH+x]);
+        if visited[(y-1)*WIDTH+x] == false {
+            // println!("{}", data[(y-1)*WIDTH+x]);
             size += get_basin_size(data, x, y-1, visited);
         }
     }
@@ -115,8 +105,8 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                     .filter(|f| !f.is_empty())
                     .enumerate()
                     .for_each(|(x, g)| {
-                        println!("{}|{}", x, y);
-                        v[(y * WIDTH as usize + x) as usize] = g.parse().unwrap();
+                        // println!("{}|{}", x, y);
+                        v[y * WIDTH + x] = g.parse().unwrap();
                     });
             });
 
@@ -127,15 +117,15 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
         for y in 0..HEIGHT {
             for x in 0..WIDTH {
                 let low = is_lowest(&data, x, y);
-                println!(
-                    "[{}|{}]: {} -> {}",
-                    x,
-                    y,
-                    data[(y * WIDTH + x) as usize],
-                    low
-                );
+                // println!(
+                //     "[{}|{}]: {} -> {}",
+                //     x,
+                //     y,
+                //     data[y * WIDTH + x],
+                //     low
+                // );
                 if low {
-                    sum += data[(y * WIDTH + x) as usize] as u64 + 1;
+                    sum += data[y * WIDTH + x] as u64 + 1;
                 }
             }
         }
@@ -146,13 +136,13 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
         for y in 0..HEIGHT {
             for x in 0..WIDTH {
                 let low = is_lowest(&data, x, y);
-                println!(
-                    "[{}|{}]: {} -> {}",
-                    x,
-                    y,
-                    data[(y * WIDTH + x) as usize],
-                    low
-                );
+                // println!(
+                //     "[{}|{}]: {} -> {}",
+                //     x,
+                //     y,
+                //     data[y * WIDTH + x],
+                //     low
+                // );
                 if low {
                     low_point.push((x, y));
                 }
@@ -163,11 +153,11 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
         let mut visited = [false; SIZE];
         for p in low_point {
             let size = get_basin_size(data, p.0, p.1, &mut visited);
-            println!("[{}|{}]: {}", p.0, p.1, size);
+            // println!("[{}|{}]: {}", p.0, p.1, size);
             basin_size.push(size as u64);
         }
         basin_size.sort();
-        println!("{:?}", basin_size);
+        // println!("{:?}", basin_size);
         basin_size.pop().unwrap() * basin_size.pop().unwrap() * basin_size.pop().unwrap()
     }
 }
