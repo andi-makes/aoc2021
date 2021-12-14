@@ -6,23 +6,21 @@ use const_format::formatcp;
 const CURRENT_DAY: u8 = 14;
 const FILE: &'static str = formatcp!("./inputs/input{}.txt", CURRENT_DAY);
 
-type Data = (HashMap<[char; 2], u64>, Vec<(Vec<char>, char)>);
+type Data = (HashMap<String, u64>, HashMap<String, char>);
 impl Runnable<Data> for Day<CURRENT_DAY> {
     fn init(_input: &str) -> (Self, Data) {
-        let mut v: Data = (HashMap::new(), Vec::new());
+        let mut v: Data = (HashMap::new(), HashMap::new());
         std::fs::read_to_string(FILE)
             .unwrap()
             .lines().enumerate()
             .for_each(|(i,s)| {
                 if i == 0 {
-                    let chars: Vec<char> = s.chars().collect();
-                    for i in 0..chars.len()-1 {
-                        v.0.insert([chars[i], chars[i+1]], 1);
+                    for i in 0..s.len()-1 {
+                        *v.0.entry(s[i..(i+2)].to_string()).or_insert(0) += 1;
                     }
                 }
                 if i >= 2 {
-                    let split: Vec<&str> = s.split(" -> ").collect();
-                    v.1.push((split[0].chars().collect(), split[1].chars().next().unwrap()));
+                    v.1.insert(s[0..2].to_string(), s[6..7].chars().next().unwrap());
                 }
             });
 
@@ -31,68 +29,66 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
         (Self {}, v)
     }
     fn one(&self, data: &mut Data) -> u64 {
+        println!("INITIAL DATA: \n{:?}", data.0);
         for step in 0..10 {
-            for (key, entry) in data.0.clone() {  
+            println!("STEP {}:", step+1);
+            let mut working = HashMap::new();
+            for (key, entry) in &data.0 {  
                 for (pattern, insert) in &data.1 {
-                    if key == [pattern[0], pattern[1]] && entry != 0 {
-                        *data.0.entry([pattern[0], pattern[1]]).or_insert(0) -= entry;
-                        *data.0.entry([pattern[0], *insert]).or_insert(0) += entry;
-                        *data.0.entry([*insert, pattern[1]]).or_insert(0) += entry;
+                    if key == pattern {
+                        let p1 = format!("{}{}", pattern[0..1].to_string(), insert);
+                        let p2 = format!("{}{}", insert, pattern[1..2].to_string());
+                        *working.entry(p1.clone()).or_insert(0) += entry;
+                        *working.entry(p2.clone()).or_insert(0) += entry;
                         // break;
                     }
                 }
             }
-            // println!("{:?}", data.0);
+            data.0 = working.clone();
+            println!("{:?}", data.0);
         }
  
-        // data.0.sort();
-        // let mut numbers = Vec::new();
-        // let mut old_char = '0';
         let mut amount: HashMap<char, u64> = HashMap::new();
 
         for (key, entry) in &data.0 {
-            //*amount.entry(key[0]).or_insert(0) += entry;
-            *amount.entry(key[1]).or_insert(0) += entry;
+            *amount.entry(key[1..2].chars().next().unwrap()).or_insert(0) += entry;
         }
 
         let mut num: Vec<u64> = amount.clone().into_values().collect();
         num.sort();
-        // println!("{:?}", num);
+        println!("{:?}", num);
         num.last().unwrap() - num.first().unwrap()
     }
     fn two(&self, data: &mut Data) -> u64 { 
-        // for step in 0..40 {
-        //     let mut inserted = 0;
-        //     for i in 0..data.0.len()-1 {  
-        //         for (pattern, insert) in &data.1 {
-        //             if data.0[i+inserted] == pattern[0] && data.0[i+1+inserted] == pattern[1] {
-        //                 data.0.insert(i+1+inserted, *insert);
-        //                 inserted += 1;
-        //                 break;
-        //             }
-        //         }
-        //     }
-        //     // println!("{:?}", data.0);
-        // }
+        println!("INITIAL DATA: \n{:?}", data.0);
+        for step in 0..40 {
+            println!("STEP {}:", step+1);
+            let mut working = HashMap::new();
+            for (key, entry) in &data.0 {  
+                for (pattern, insert) in &data.1 {
+                    if key == pattern {
+                        let p1 = format!("{}{}", pattern[0..1].to_string(), insert);
+                        let p2 = format!("{}{}", insert, pattern[1..2].to_string());
+                        *working.entry(p1.clone()).or_insert(0) += entry;
+                        *working.entry(p2.clone()).or_insert(0) += entry;
+                        // break;
+                    }
+                }
+            }
+            data.0 = working.clone();
+            println!("{:?}", data.0);
+        }
+ 
+        let mut amount: HashMap<char, u64> = HashMap::new();
 
-        // data.0.sort();
-        // let mut numbers = Vec::new();
-        // let mut old_char = '0';
-        // for c in &data.0 {
-        //     if old_char != *c {
-        //         old_char = *c;
-        //         numbers.push(1);
-        //     } else {
-        //         let index = numbers.len()-1;
-        //         numbers[index] += 1;
-        //     }
-        // }
+        for (key, entry) in &data.0 {
+            *amount.entry(key[1..2].chars().next().unwrap()).or_insert(0) += entry;
+        }
 
-        // numbers.sort();
-        // println!("{:?}", numbers);
-
-        // (numbers.last().unwrap() - numbers.first().unwrap()) as u64
-        0
+        let mut num: Vec<u64> = amount.clone().into_values().collect();
+        num.sort();
+        println!("{:?}", num);
+        num.last().unwrap() - num.first().unwrap()
      }
 }
 
