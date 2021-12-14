@@ -24,14 +24,14 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                 }
             });
 
-        println!("{:?}", v);
+        // println!("{:?}", v);
 
         (Self {}, v)
     }
     fn one(&self, data: &mut Data) -> u64 {
-        println!("INITIAL DATA: \n{:?}", data.0);
+        // println!("INITIAL DATA: \n{:?}", data.0);
         for step in 0..10 {
-            println!("STEP {}:", step+1);
+            // println!("STEP {}:", step+1);
             let mut working = HashMap::new();
             for (key, entry) in &data.0 {  
                 for (pattern, insert) in &data.1 {
@@ -45,7 +45,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                 }
             }
             data.0 = working.clone();
-            println!("{:?}", data.0);
+            // println!("{:?}", data.0);
         }
  
         let mut amount: HashMap<char, u64> = HashMap::new();
@@ -56,13 +56,13 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
 
         let mut num: Vec<u64> = amount.clone().into_values().collect();
         num.sort();
-        println!("{:?}", num);
+        // println!("{:?}", num);
         num.last().unwrap() - num.first().unwrap()
     }
     fn two(&self, data: &mut Data) -> u64 { 
-        println!("INITIAL DATA: \n{:?}", data.0);
+        // println!("INITIAL DATA: \n{:?}", data.0);
         for step in 0..40 {
-            println!("STEP {}:", step+1);
+            // println!("STEP {}:", step+1);
             let mut working = HashMap::new();
             for (key, entry) in &data.0 {  
                 for (pattern, insert) in &data.1 {
@@ -76,7 +76,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
                 }
             }
             data.0 = working.clone();
-            println!("{:?}", data.0);
+            // println!("{:?}", data.0);
         }
  
         let mut amount: HashMap<char, u64> = HashMap::new();
@@ -87,7 +87,7 @@ impl Runnable<Data> for Day<CURRENT_DAY> {
 
         let mut num: Vec<u64> = amount.clone().into_values().collect();
         num.sort();
-        println!("{:?}", num);
+        // println!("{:?}", num);
         num.last().unwrap() - num.first().unwrap()
      }
 }
